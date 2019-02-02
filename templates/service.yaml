@@ -98,15 +98,8 @@ Resources:
       ContainerDefinitions:
         - Name: niddel-public-api
           Image: spikerlabs/scala-sbt
-          EntryPoint:
-            - /usr/local
-            - -D
-            - FOREGROUND
           Essential: true
           Memory: 256
-          MountPoints:
-            - SourceVolume: my-vol
-              ContainerPath: /var/www/my-vol
           PortMappings:
             - ContainerPort: 9000
           LogConfiguration:
@@ -115,21 +108,8 @@ Resources:
               awslogs-region: !Ref AWS::Region
               awslogs-group: !Ref LogGroup
               awslogs-stream-prefix: !Ref AWS::StackName
-        - Name: busybox
-          Image: busybox
-          EntryPoint:
-            - sh
-            - -c
-          Essential: true
-          Memory: 256
-          VolumesFrom:
-            - SourceContainer: niddel-public-api
-          Command:
-            - /bin/sh -c "while true; do /bin/date > /var/www/my-vol/date; sleep 1; done"
-      Volumes:
-        - Name: my-vol
-
-
+        
+        
 Outputs:
   Service:
     Value: !If [ Fargate, !Ref FargateService, !Ref EC2Service ]
