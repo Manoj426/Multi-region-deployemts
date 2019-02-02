@@ -135,12 +135,12 @@ Resources:
             post_build:
               commands:
                 - docker push "$IMAGE"
-                - printf '[{"name":"simple-app","imageUri":"%s"}]' "$IMAGE" > images.json
+                - printf '[{"name":"niddel-public-api","IMAGE_URI":$IMAGE_URI}]' > imagedefinitions.json
           artifacts:
-            files: images.json
+            files: imagedefinitions.json
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/docker:17.09.0
+        Image: aws/codebuild/docker:18.09.0-1.7.0
         Type: LINUX_CONTAINER
         EnvironmentVariables:
           - Name: AWS_DEFAULT_REGION
@@ -200,7 +200,7 @@ Resources:
               Configuration:
                 ClusterName: !Ref Cluster
                 ServiceName: !Ref Service
-                FileName: images.json
+                FileName: imagedefinitions.json
               InputArtifacts:
                 - Name: BuildOutput
               RunOrder: 1
