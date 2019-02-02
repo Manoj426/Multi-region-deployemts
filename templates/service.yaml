@@ -38,7 +38,7 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       Path: /
-      AssumeRolePolicyDocument:s
+      AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
           - Action: sts:AssumeRole
