@@ -1,0 +1,146 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+  Globalpublicapi:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "global-public-api"
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Sid: AllowPushPull
+            Effect: Allow
+            Principal:
+              AWS:
+                - !GetAtt [ "ECRrole", "Arn" ]
+            Action:
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:BatchGetImage"
+              - "ecr:PutImage"
+  Globalinternalapi:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "global-internal-api"
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Sid: AllowPushPull
+            Effect: Allow
+            Principal:
+              AWS:
+                - !GetAtt [ "ECRrole", "Arn" ]
+            Action:
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:BatchGetImage"
+              - "ecr:PutImage"
+  Globaldb:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "global-db"
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Sid: AllowPushPull
+            Effect: Allow
+            Principal:
+              AWS:
+                - !GetAtt [ "ECRrole", "Arn" ]
+            Action:
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:BatchGetImage"
+              - "ecr:PutImage"
+  Globalworker:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "global-worker"
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Sid: AllowPushPull
+            Effect: Allow
+            Principal:
+              AWS:
+                - !GetAtt [ "ECRrole", "Arn" ]
+            Action:
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:BatchGetImage"
+              - "ecr:PutImage"
+  Regionpublicapi:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "region-public-api"
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Sid: AllowPushPull
+            Effect: Allow
+            Principal:
+              AWS:
+                - !GetAtt [ "ECRrole", "Arn" ]
+            Action:
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:BatchGetImage"
+              - "ecr:PutImage"
+  Repository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "region-internal-api"
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Sid: AllowPushPull
+            Effect: Allow
+            Principal:
+              AWS:
+                - !GetAtt [ "ECRrole", "Arn" ]
+            Action:
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:BatchGetImage"
+              - "ecr:PutImage"
+  
+             
+
+  ECRrole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      Path: "/application/"
+      RoleName: "ECR-push"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "ec2.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+
+  PushPolicy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyName: "ECR_push"
+      Roles:
+        - !Ref ECRrole
+      PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            -
+              Resource: "*"
+              Effect: "Allow"
+              Action:
+                - "ecr:BatchDeleteImage"
+                - "ecr:CompleteLayerUpload"
+                - "ecr:InitiateLayerUpload"
+                - "ecr:ListImages"
+                - "ecr:PutImage"
+                - "ecr:UploadLayerPart"
+                - "ecr:InitiateLayerUpload"
+                - "ecr:UploadLayerPart"
+                - "ecr:BatchCheckLayerAvailability"
